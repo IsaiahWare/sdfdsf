@@ -98,12 +98,14 @@ void store(unsigned long long int addr, int size) {
 
     if (set[eviction_line].valid) {
         evictions++;
-        if (set[eviction_line].dirty) {
-            dirty_evicted += set[eviction_line].size;
-            dirty_active -= set[eviction_line].size;
-        }
     }
 
+    if (set[eviction_line].dirty) {
+        dirty_evicted += set[eviction_line].size;
+        dirty_active -= set[eviction_line].size;
+    }
+
+    set[eviction_line].dirty = 0;
     set[eviction_line].valid = 1;
     set[eviction_line].tag = tag;
     set[eviction_line].timestamp = timestamp++;
@@ -139,13 +141,14 @@ void load(unsigned long long int addr, int size) {
 
     if (set[eviction_line].valid) {
         evictions++;
-        if (set[eviction_line].dirty) {
-            dirty_evicted += set[eviction_line].size;
-            dirty_active -= set[eviction_line].size;
-            set[eviction_line].dirty = 0;
-        }
     }
 
+    if (set[eviction_line].dirty) {
+        dirty_evicted += set[eviction_line].size;
+        dirty_active -= set[eviction_line].size;
+    }
+
+    set[eviction_line].dirty = 0;
     set[eviction_line].valid = 1;
     set[eviction_line].tag = tag;
     set[eviction_line].timestamp = timestamp++;
