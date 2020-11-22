@@ -65,7 +65,7 @@ cache_set_tracker_t* set_tracker;
 void initCache() {
     int i, j;
     cache = (cache_set_t*)malloc(sizeof(cache_set_t) * S);
-    set_tracker = (cache_set_tracker_t*)malloc(sizeof(cache_set_tracker_t) * S);
+    set_tracker = malloc(sizeof(cache_set_tracker_t) * S);
     for (i = 0; i < S; i++) {
         cache[i] = (cache_line_t*)malloc(sizeof(cache_line_t) * E);
         set_tracker[i].prev_set_index = -1;
