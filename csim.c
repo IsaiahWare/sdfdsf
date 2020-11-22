@@ -231,6 +231,6 @@ int main(int argc, char* argv[]) {
     freeCache();
 
     /* Output the hit and miss statistics for the autograder */
-    printSummary(hit_count, miss_count, eviction_count,0,0,0);
+    printSummary(hit_count, miss_count, eviction_count,0,0,double_accesses);
     return 0;
 }
