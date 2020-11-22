@@ -51,11 +51,7 @@ unsigned long long int lru_counter = 1;
 cache_t cache;
 mem_addr_t set_index_mask;
 
-typedef struct cache_set_tracker {
-    mem_addr_t prev_tag;
-} cache_set_tracker_t;
-
-cache_set_tracker_t* set_tracker;
+mem_addr_t* set_tracker;
 
 /*
  * initCache - Allocate memory, write 0's for valid and tag and LRU
@@ -64,11 +60,11 @@ cache_set_tracker_t* set_tracker;
 void initCache() {
     int i, j;
     cache = (cache_set_t*)malloc(sizeof(cache_set_t) * S);
-    set_tracker = malloc(sizeof(cache_set_tracker_t) * S);
+    set_tracker = malloc(sizeof(mem_addr_t) * S);
     
     for (i = 0; i < S; i++) {
         cache[i] = (cache_line_t*)malloc(sizeof(cache_line_t) * E);
-        set_tracker[i].prev_tag = -1;
+        set_tracker[i] = NULL;
         for (j = 0; j < E; j++) {
             cache[i][j].valid = 0;
             cache[i][j].tag = 0;
@@ -112,7 +108,7 @@ void accessData(mem_addr_t addr) {
                 // if (set_tracker[i].prev_tag == tag) {
                 //     double_accesses++;
                 // }
-                set_tracker[i].prev_tag = tag;
+                set_tracker[i] = tag;
                 cache_set[i].lru = lru_counter++;
                 hit_count++;
                 return;
