@@ -105,7 +105,6 @@ void store(unsigned long long int addr, int size) {
         dirty_active -= set[eviction_line].size;
     }
 
-    set[eviction_line].dirty = 0;
     set[eviction_line].valid = 1;
     set[eviction_line].tag = tag;
     set[eviction_line].timestamp = timestamp++;
@@ -149,44 +148,6 @@ void load(unsigned long long int addr, int size) {
     }
 
     set[eviction_line].dirty = 0;
-    set[eviction_line].valid = 1;
-    set[eviction_line].tag = tag;
-    set[eviction_line].timestamp = timestamp++;
-}
-
-void accessData(unsigned long long int addr) {
-    int i;
-    unsigned int eviction_line = 0;
-    unsigned long long int set_index = (addr >> b) & set_index_mask;
-    unsigned long long int tag = addr >> (s + b);
-
-    set_t set = cache[set_index];
-
-    for (i = 0; i < E; ++i) {
-        if (set[i].valid) {
-            if (set[i].tag == tag) {
-                set[i].timestamp = timestamp++;
-                hits++;
-                return;
-            }
-        }
-    }
-
-    misses++;
-
-    unsigned long long int eviction_lru = ULONG_MAX;
-
-    for (int i = 0; i < E; ++i) {
-        if (eviction_lru > set[i].timestamp) {
-            eviction_line = i;
-            eviction_lru = set[i].timestamp;
-        }
-    }
-
-    if (set[eviction_line].valid) {
-        evictions++;
-    }
-
     set[eviction_line].valid = 1;
     set[eviction_line].tag = tag;
     set[eviction_line].timestamp = timestamp++;
