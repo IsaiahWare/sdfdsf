@@ -101,7 +101,6 @@ void store(unsigned long long int addr, int size) {
         if (set[eviction_line].dirty) {
             dirty_evicted += set[eviction_line].size;
             dirty_active -= set[eviction_line].size;
-            set[eviction_line].dirty = 0;
         }
     }
 
