@@ -8,6 +8,7 @@
 #include <string.h>
 #include <unistd.h>
 #include "cachelab.h"
+#include <iostream.h>
 
 //#define DEBUG_ON
 #define ADDRESS_LENGTH 64
@@ -51,17 +52,17 @@ unsigned long long int lru_counter = 1;
 cache_t cache;
 mem_addr_t set_index_mask;
 
-mem_addr_t* set_tracker;
+mem_addr_t * set_tracker;
 
 /*
  * initCache - Allocate memory, write 0's for valid and tag and LRU
  * also computes the set_index_mask
  */
-void initCache() {
+void initCache(int S) {
     int i, j;
     cache = (cache_set_t*)malloc(sizeof(cache_set_t) * S);
-    // set_tracker = malloc(sizeof(mem_addr_t) * S);
-    
+    set_tracker = malloc(sizeof(mem_addr_t) * S);
+    cout << "set tracker: " << set_tracker << endl;
     for (i = 0; i < S; i++) {
         cache[i] = (cache_line_t*)malloc(sizeof(cache_line_t) * E);
         // *(set_tracker+i) = 0;
@@ -80,11 +81,11 @@ void initCache() {
  * freeCache - free allocated memory
  */
 void freeCache() {
-    // int i;
-    // for (i = 0; i < S; i++) {
-    //     free(cache[i]);
-    // }
-    // free(cache);
+    int i;
+    for (i = 0; i < S; i++) {
+        free(cache[i]);
+    }
+    free(cache);
 }
 
 /*
@@ -217,7 +218,7 @@ int main(int argc, char* argv[]) {
     B = (unsigned int)pow(2, b);
 
     /* Initialize cache */
-    initCache();
+    initCache(S);
 
 #ifdef DEBUG_ON
     printf("DEBUG: S:%u E:%u B:%u trace:%s\n", S, E, B, trace_file);
