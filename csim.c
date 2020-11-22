@@ -64,7 +64,7 @@ void initCache(int S) {
     printf("set tracker is %p\n", set_tracker);
     for (i = 0; i < S; i++) {
         cache[i] = (cache_line_t*)malloc(sizeof(cache_line_t) * E);
-        // *(set_tracker+i) = 0;
+        *(set_tracker+i) = 0;
         for (j = 0; j < E; j++) {
             cache[i][j].valid = 0;
             cache[i][j].tag = 0;
@@ -108,7 +108,7 @@ void accessData(mem_addr_t addr) {
                 // if (set_tracker[i].prev_tag == tag) {
                 //     double_accesses++;
                 // }
-                // *(set_tracker + i) = tag;
+                *(set_tracker + i) = tag;
                 cache_set[i].lru = lru_counter++;
                 hit_count++;
                 return;
