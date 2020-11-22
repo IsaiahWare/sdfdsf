@@ -90,6 +90,7 @@ void freeCache() {
         free(cache[i]);
     }
     free(cache);
+    free(set_tracker);
 }
 
 /*
