@@ -106,11 +106,15 @@ void replayTrace(char* trace_fn) {
     int size;
 
     while (fscanf(trace_fp, " %c %llx,%d", &trace_cmd, &address, &size) == 3) {
-        switch(trace_cmd) {
-            case 'L': accessData(address); break;
-            case 'S': accessData(address); break;
-            case 'M': accessData(address); accessData(address); break;
-            default: break;
+        if (trace_cmd == 'L') {
+            accessData(address);
+        }
+        else if (trace_cmd == 'S') {
+            accessData(address);
+        }
+        else if (trace_cmd == 'M') {
+            accessData(address);
+            accessData(address);
         }
     }
 
