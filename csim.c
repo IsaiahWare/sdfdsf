@@ -64,7 +64,7 @@ void initCache() {
     
     for (i = 0; i < S; i++) {
         cache[i] = (cache_line_t*)malloc(sizeof(cache_line_t) * E);
-        *(set_tracker+i) = NULL;
+        *(set_tracker+i) = 0;
         for (j = 0; j < E; j++) {
             cache[i][j].valid = 0;
             cache[i][j].tag = 0;
