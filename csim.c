@@ -93,13 +93,13 @@ void accessData(unsigned long long int addr) {
         }
     }
 
-    if (cache_set[eviction_line].valid) {
+    if (set[eviction_line].valid) {
         evictions++;
     }
 
-    cache_set[eviction_line].valid = 1;
-    cache_set[eviction_line].tag = tag;
-    cache_set[eviction_line].timestamp = timestamp++;
+    set[eviction_line].valid = 1;
+    set[eviction_line].tag = tag;
+    set[eviction_line].timestamp = timestamp++;
 }
 
 void replayTrace(char* trace_fn) {
