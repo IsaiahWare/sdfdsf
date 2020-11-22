@@ -116,7 +116,7 @@ void accessData(mem_addr_t addr) {
             }
         }
     }
-
+    set_tracker[i] = tag;
     miss_count++;
 
     for (int i = 0; i < E; ++i) {
