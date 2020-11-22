@@ -60,7 +60,7 @@ mem_addr_t * set_tracker;
 void initCache(int S) {
     int i, j;
     cache = (cache_set_t*)malloc(sizeof(cache_set_t) * S);
-    set_tracker = (mem_addr_t) malloc(sizeof(mem_addr_t) * S);
+    set_tracker = (mem_addr_t*) malloc(sizeof(mem_addr_t) * S);
     printf("set tracker is %p\n", set_tracker);
     for (i = 0; i < S; i++) {
         cache[i] = (cache_line_t*)malloc(sizeof(cache_line_t) * E);
