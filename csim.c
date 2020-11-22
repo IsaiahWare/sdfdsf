@@ -29,6 +29,8 @@ unsigned long long int timestamp = 0;
 
 typedef struct line {
     char valid;
+    char dirty;
+    int size;
     unsigned long long int tag;
     unsigned long timestamp;
 } line_t;
@@ -47,6 +49,8 @@ void initCache() {
         cache[i] = (line_t*)malloc(sizeof(line_t) * E);
         for (j = 0; j < E; j++) {
             cache[i][j].valid = 0;
+            cache[i][j].dirty = 0;
+            cache[i][j].size = 0;
             cache[i][j].tag = 0;
             cache[i][j].timestamp = 0;
         }
@@ -59,6 +63,52 @@ void freeCache() {
         free(cache[i]);
     }
     free(cache);
+}
+
+void store(unsigned long long int addr, int size) {
+    int i;
+    unsigned long long int set_index = (addr >> b) & set_index_mask;
+    unsigned long long int tag = addr >> (s + b);
+
+    set_t set = cache[set_index];
+
+    for (i = 0; i < E; ++i) {
+        if (set[i].valid) {
+            if (set[i].tag == tag) {
+                set[i].timestamp = timestamp++;
+                set[i].dirty = 1;
+                dirty_active += size;
+                hits++;
+                return;
+            }
+        }
+    }
+
+    unsigned long long int eviction_lru = ULONG_MAX;
+    unsigned int eviction_line = 0;
+
+    misses++;
+
+    for (int i = 0; i < E; ++i) {
+        if (eviction_lru > set[i].timestamp) {
+            eviction_line = i;
+            eviction_lru = set[i].timestamp;
+        }
+    }
+
+    if (set[eviction_line].valid) {
+        evictions++;
+    }
+
+    if (set[eviction_line].dirty) {
+        dirty_evicted += size;
+        dirty_active -= size;
+        set[eviction_line].dirty = 0;
+    }
+
+    set[eviction_line].valid = 1;
+    set[eviction_line].tag = tag;
+    set[eviction_line].timestamp = timestamp++;
 }
 
 void accessData(unsigned long long int addr) {
@@ -110,7 +160,7 @@ void replayTrace(char* trace_fn) {
             accessData(address);
         }
         else if (trace_cmd == 'S') {
-            accessData(address);
+            store(address, size);
         }
         else if (trace_cmd == 'M') {
             accessData(address);
