@@ -124,50 +124,31 @@ int main(int argc, char* argv[]) {
     char c;
 
     while ((c = getopt(argc, argv, "s:E:b:t:vh")) != -1) {
-        switch (c) {
-            case 's':
-                s = atoi(optarg);
-                break;
-            case 'E':
-                E = atoi(optarg);
-                break;
-            case 'b':
-                b = atoi(optarg);
-                break;
-            case 't':
-                file = optarg;
-                break;
-            case 'v':
-                break;
-            // case 'h':
-            //     printUsage(argv);
-            //     exit(0);
-            default:
-                // printUsage(argv);
-                exit(1);
+        if (c == 's') {
+            s = atoi(optarg);
+        }
+        else if (c == 'E') {
+            E = atoi(optarg);
+        }
+        else if (c == 'b') {
+            b = atoi(optarg);
+        }
+        else if (c == 't') {
+            file = optarg;
+        }
+        else {
+            exit(1);
         }
     }
-
-    // /* Make sure that all required command line args were specified */
-    // if (s == 0 || E == 0 || b == 0 || trace_file == NULL) {
-    //     printf("%s: Missing required command line argument\n", argv[0]);
-    //     printUsage(argv);
-    //     exit(1);
-    // }
 
     /* Compute S, E and B from command line args */
     S = (unsigned int)(1 << s);
     B = (unsigned int)(1 << b);
 
-    /* Initialize cache */
     initCache();
-
     replayTrace(file);
-
-    /* Free allocated memory */
     freeCache();
+    printSummary(hits, misses, evictions, dirty_evicted, dirty_active, double_accesses);
 
-    /* Output the hit and miss statistics for the autograder */
-    printSummary(hits, misses, evictions,dirty_evicted,dirty_active,double_accesses);
     return 0;
 }
