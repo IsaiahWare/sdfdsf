@@ -56,9 +56,7 @@ typedef struct cache_set_tracker {
     mem_addr_t prev_tag;
 } cache_set_tracker_t;
 
-typedef cache_set_tracker_t* tracker;
-
-tracker set_tracker;
+cache_set_tracker_t* set_tracker;
 
 /*
  * initCache - Allocate memory, write 0's for valid and tag and LRU
@@ -70,8 +68,8 @@ void initCache() {
     set_tracker = (cache_set_tracker_t*)malloc(sizeof(cache_set_tracker_t) * S);
     for (i = 0; i < S; i++) {
         cache[i] = (cache_line_t*)malloc(sizeof(cache_line_t) * E);
-        set_tracker[i].prev_set_index = -1;
-        set_tracker[i].prev_tag = -1;
+        // set_tracker[i].prev_set_index = -1;
+        // set_tracker[i].prev_tag = -1;
         for (j = 0; j < E; j++) {
             cache[i][j].valid = 0;
             cache[i][j].tag = 0;
@@ -112,11 +110,11 @@ void accessData(mem_addr_t addr) {
     for (i = 0; i < E; ++i) {
         if (cache_set[i].valid) {
             if (cache_set[i].tag == tag) {
-                if (set_tracker[i].prev_set_index == set_index && set_tracker[i].prev_tag == tag) {
-                    double_accesses++;
-                }
-                set_tracker[i].prev_set_index = set_index;
-                set_tracker[i].prev_tag = tag;
+                // if (set_tracker[i].prev_set_index == set_index && set_tracker[i].prev_tag == tag) {
+                //     double_accesses++;
+                // }
+                // set_tracker[i].prev_set_index = set_index;
+                // set_tracker[i].prev_tag = tag;
                 cache_set[i].lru = lru_counter++;
                 hit_count++;
                 return;
