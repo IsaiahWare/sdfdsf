@@ -66,10 +66,11 @@ void initCache() {
     int i, j;
     cache = (cache_set_t*)malloc(sizeof(cache_set_t) * S);
     set_tracker = malloc(sizeof(cache_set_tracker_t) * S);
+    
     for (i = 0; i < S; i++) {
         cache[i] = (cache_line_t*)malloc(sizeof(cache_line_t) * E);
-        set_tracker[i].prev_set_index = -1;
-        set_tracker[i].prev_tag = -1;
+        // set_tracker[i].prev_set_index = -1;
+        // set_tracker[i].prev_tag = -1;
         for (j = 0; j < E; j++) {
             cache[i][j].valid = 0;
             cache[i][j].tag = 0;
@@ -90,7 +91,6 @@ void freeCache() {
         free(cache[i]);
     }
     free(cache);
-    free(set_tracker);
 }
 
 /*
