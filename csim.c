@@ -80,11 +80,11 @@ void initCache() {
  * freeCache - free allocated memory
  */
 void freeCache() {
-    int i;
-    for (i = 0; i < S; i++) {
-        free(cache[i]);
-    }
-    free(cache);
+    // int i;
+    // for (i = 0; i < S; i++) {
+    //     free(cache[i]);
+    // }
+    // free(cache);
 }
 
 /*
