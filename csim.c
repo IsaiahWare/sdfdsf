@@ -56,9 +56,9 @@ typedef struct cache_set_tracker {
     mem_addr_t prev_tag;
 } cache_set_tracker_t;
 
-typedef cache_set_tracker_t* cache_set_tracker;
+typedef cache_set_tracker_t* tracker;
 
-cache_set_tracker set_tracker;
+tracker set_tracker;
 
 /*
  * initCache - Allocate memory, write 0's for valid and tag and LRU
