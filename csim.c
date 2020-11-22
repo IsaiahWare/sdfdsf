@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include "cachelab.h"
 
 char * file = NULL;
 
@@ -28,7 +29,7 @@ unsigned long long int timestamp = 0;
 
 typedef struct line {
     char valid;
-    unsigned long long int address;
+    unsigned long long int tag;
     unsigned long timestamp;
 } line_t;
 
@@ -47,7 +48,7 @@ void initCache() {
         for (j = 0; j < E; j++) {
             cache[i][j].valid = 0;
             cache[i][j].tag = 0;
-            cache[i][j].lru = 0;
+            cache[i][j].timestamp = 0;
         }
     }
 
@@ -65,7 +66,6 @@ void freeCache() {
 
 void accessData(unsigned long long int addr) {
     int i;
-    unsigned long long int eviction_lru = ULONG_MAX;
     unsigned int eviction_line = 0;
     unsigned long long int set_index = (addr >> b) & set_index_mask;
     unsigned long long int tag = addr >> (s + b);
@@ -84,10 +84,12 @@ void accessData(unsigned long long int addr) {
 
     misses++;
 
+    unsigned long long int eviction_lru = ULONG_MAX;
+
     for (int i = 0; i < E; ++i) {
-        if (eviction_lru > cache_set[i].timestamp) {
+        if (eviction_lru > set[i].timestamp) {
             eviction_line = i;
-            eviction_lru = cache_set[i].timestamp;
+            eviction_lru = set[i].timestamp;
         }
     }
 
