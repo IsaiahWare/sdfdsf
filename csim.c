@@ -85,6 +85,7 @@ void freeCache() {
         free(cache[i]);
     }
     free(cache);
+    free(set_tracker);
 }
 
 /*
@@ -105,10 +106,10 @@ void accessData(mem_addr_t addr) {
     for (i = 0; i < E; ++i) {
         if (cache_set[i].valid) {
             if (cache_set[i].tag == tag) {
-                if (set_tracker[i].prev_tag == tag) {
+                if (set_tracker[i] == tag) {
                     double_accesses++;
                 }
-                *(set_tracker + i) = tag;
+                set_tracker[i] = tag;
                 cache_set[i].lru = lru_counter++;
                 hit_count++;
                 return;
