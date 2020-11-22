@@ -28,6 +28,7 @@ typedef struct cache_line {
 typedef cache_line_t* cache_set_t;
 typedef cache_set_t* cache_t;
 
+
 /* Globals set by command line args */
 int verbosity = 0; /* print trace if set */
 int s = 0;         /* set index bits */
@@ -49,6 +50,15 @@ unsigned long long int lru_counter = 1;
 cache_t cache;
 mem_addr_t set_index_mask;
 
+typedef struct cache_set_tracker {
+    int prev_set_index;
+    mem_addr_t prev_tag;
+} cache_set_tracker_t;
+
+typedef cache_set_tracker_t* cache_set_tracker;
+
+cache_set_tracker set_tracker;
+
 /*
  * initCache - Allocate memory, write 0's for valid and tag and LRU
  * also computes the set_index_mask
@@ -56,8 +66,11 @@ mem_addr_t set_index_mask;
 void initCache() {
     int i, j;
     cache = (cache_set_t*)malloc(sizeof(cache_set_t) * S);
+    set_tracker = (cache_set_tracker_t*)malloc(sizeof(cache_set_tracker_t) * S);
     for (i = 0; i < S; i++) {
         cache[i] = (cache_line_t*)malloc(sizeof(cache_line_t) * E);
+        set_tracker[i].prev_set_index = -1;
+        set_tracker[i].prev_tag = -1;
         for (j = 0; j < E; j++) {
             cache[i][j].valid = 0;
             cache[i][j].tag = 0;
