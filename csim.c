@@ -51,9 +51,6 @@ void initCache() {
             cache[i][j].timestamp = 0;
         }
     }
-
-    /* Computes set index mask */
-    set_index_mask = (unsigned long long int )((1 << s)- 1);
 }
 
 void freeCache() {
@@ -141,7 +138,8 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    /* Compute S, E and B from command line args */
+    set_index_mask = (unsigned long long int )((1 << s)- 1);
+
     S = (unsigned int)(1 << s);
     B = (unsigned int)(1 << b);
 
