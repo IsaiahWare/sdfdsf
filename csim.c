@@ -8,7 +8,6 @@
 #include <string.h>
 #include <unistd.h>
 #include "cachelab.h"
-#include <iostream.h>
 
 //#define DEBUG_ON
 #define ADDRESS_LENGTH 64
