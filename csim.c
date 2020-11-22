@@ -8,7 +8,7 @@
 #include <string.h>
 #include <unistd.h>
 
-char * file = NULL:
+char * file = NULL;
 
 int misses = 0;
 int hits = 0;
@@ -37,6 +37,8 @@ typedef set_t * cache_t;
 
 unsigned long long int set_index_mask;
 
+cache_t cache;
+
 void initCache() {
     int i, j;
     cache = (set_t*)malloc(sizeof(set_t) * S);
@@ -61,26 +63,26 @@ void freeCache() {
     free(cache);
 }
 
-void accessData(mem_addr_t addr) {
+void accessData(unsigned long long int addr) {
     int i;
     unsigned long long int eviction_lru = ULONG_MAX;
     unsigned int eviction_line = 0;
-    mem_addr_t set_index = (addr >> b) & set_index_mask;
-    mem_addr_t tag = addr >> (s + b);
+    unsigned long long int set_index = (addr >> b) & set_index_mask;
+    unsigned long long int tag = addr >> (s + b);
 
-    cache_set_t cache_set = cache[set_index];
+    set_t set = cache[set_index];
 
     for (i = 0; i < E; ++i) {
-        if (cache_set[i].valid) {
-            if (cache_set[i].tag == tag) {
-                cache_set[i].timestamp = timestamp++;
+        if (set[i].valid) {
+            if (set[i].tag == tag) {
+                set[i].timestamp = timestamp++;
                 hits++;
                 return;
             }
         }
     }
 
-    miss_count++;
+    misses++;
 
     for (int i = 0; i < E; ++i) {
         if (eviction_lru > cache_set[i].timestamp) {
@@ -95,13 +97,13 @@ void accessData(mem_addr_t addr) {
 
     cache_set[eviction_line].valid = 1;
     cache_set[eviction_line].tag = tag;
-    cache_set[eviction_line].lru = lru_counter++;
+    cache_set[eviction_line].timestamp = timestamp++;
 }
 
 void replayTrace(char* trace_fn) {
     FILE* trace_fp = fopen(trace_fn, "r");
     char trace_cmd;
-    mem_addr_t address;
+    unsigned long long int address;
     int size;
 
     while (fscanf(trace_fp, " %c %llx,%d", &trace_cmd, &address, &size) == 3) {
@@ -139,7 +141,7 @@ int main(int argc, char* argv[]) {
             //     printUsage(argv);
             //     exit(0);
             default:
-                printUsage(argv);
+                // printUsage(argv);
                 exit(1);
         }
     }
@@ -164,6 +166,6 @@ int main(int argc, char* argv[]) {
     freeCache();
 
     /* Output the hit and miss statistics for the autograder */
-    printSummary(hit_count, miss_count, eviction_count,dirty_active,dirty_active,double_accesses);
+    printSummary(hits, misses, evictions,dirty_evicted,dirty_active,double_accesses);
     return 0;
 }
