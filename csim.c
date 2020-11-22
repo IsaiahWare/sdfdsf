@@ -108,7 +108,7 @@ void accessData(mem_addr_t addr) {
                 // if (set_tracker[i].prev_tag == tag) {
                 //     double_accesses++;
                 // }
-                *(set_tracker + i) = tag;
+                // *(set_tracker + i) = tag;
                 cache_set[i].lru = lru_counter++;
                 hit_count++;
                 return;
