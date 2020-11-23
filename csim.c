@@ -75,8 +75,9 @@ void store(unsigned long long addr, int size) {
 
     set_t set = cache[set_index];
     int found = 0;
+    int line = 0;
 
-    for (int line = 0; line < E; ++line) {
+    while (line < E && found == 0) {
         if (set[line].valid && set[line].tag == tag) {
             set[line].timestamp = timestamp;
             set[line].dirty = 1;
@@ -87,6 +88,7 @@ void store(unsigned long long addr, int size) {
             found = 1;
             break;
         }
+        line++;
     }
 
     if (found == 0) {
