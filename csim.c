@@ -132,19 +132,19 @@ void run(char* fileName) {
 }
 
 int main(int argc, char* argv[]) {
-    char c;
+    char arg;
 
-    while ((c = getopt(argc, argv, "s:E:b:t:vh")) != -1) {
-        if (c == 's') {
+    while ((arg = getopt(argc, argv, "s:E:b:t:vh")) != -1) {
+        if (arg == 's') {
             s = atoi(optarg);
         }
-        else if (c == 'E') {
+        else if (arg == 'E') {
             E = atoi(optarg);
         }
-        else if (c == 'b') {
+        else if (arg == 'b') {
             b = atoi(optarg);
         }
-        else if (c == 't') {
+        else if (arg == 't') {
             file = optarg;
         }
         else {
@@ -152,27 +152,28 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    mask = (unsigned long long int )((1 << s)- 1);
+    mask = (unsigned long long int)((1 << s)- 1);
 
     S = (unsigned int)(1 << s);
     B = (unsigned int)(1 << b);
 
     cache = (set_t*)malloc(sizeof(set_t) * S);
-    for (int i = 0; i < S; i++) {
-        cache[i] = (line_t*)malloc(sizeof(line_t) * E);
-        for (int j = 0; j < E; j++) {
-            cache[i][j].valid = 0;
-            cache[i][j].dirty = 0;
-            cache[i][j].size = 0;
-            cache[i][j].tag = 0;
-            cache[i][j].timestamp = 0;
+    
+    for (int set = 0; set < S; set++) {
+        cache[set] = (line_t*)malloc(sizeof(line_t) * E);
+        for (int line = 0; line < E; line++) {
+            cache[set][line].valid = 0;
+            cache[set][line].dirty = 0;
+            cache[set][line].size = 0;
+            cache[set][line].tag = 0;
+            cache[set][line].timestamp = 0;
         }
     }
 
     run(file);
 
-    for (int i = 0; i < S; i++) {
-        free(cache[i]);
+    for (int set = 0; set < S; set++) {
+        free(cache[set]);
     }
     free(cache);
 
