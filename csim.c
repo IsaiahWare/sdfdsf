@@ -160,7 +160,7 @@ int main(int argc, char * argv[]) {
             file = optarg;
         }
         else {
-            exit(1);
+            return 1;
         }
     }
 
@@ -190,6 +190,4 @@ int main(int argc, char * argv[]) {
     free(cache);
 
     printSummary(hits, misses, evictions, dirty_evicted, dirty_active, double_accesses);
-
-    return 0;
 }
