@@ -157,11 +157,10 @@ int main(int argc, char* argv[]) {
     S = (unsigned int)(1 << s);
     B = (unsigned int)(1 << b);
 
-    int i, j;
     cache = (set_t*)malloc(sizeof(set_t) * S);
-    for (i = 0; i < S; i++) {
+    for (int i = 0; i < S; i++) {
         cache[i] = (line_t*)malloc(sizeof(line_t) * E);
-        for (j = 0; j < E; j++) {
+        for (int j = 0; j < E; j++) {
             cache[i][j].valid = 0;
             cache[i][j].dirty = 0;
             cache[i][j].size = 0;
@@ -172,8 +171,7 @@ int main(int argc, char* argv[]) {
 
     run(file);
 
-    int i;
-    for (i = 0; i < S; i++) {
+    for (int i = 0; i < S; i++) {
         free(cache[i]);
     }
     free(cache);
