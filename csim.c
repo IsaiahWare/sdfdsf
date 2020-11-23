@@ -69,9 +69,9 @@ void missed(set_t set, unsigned long long tag) {
     timestamp++;
 }
 
-void store(unsigned long long addr, int size) {
-    unsigned long long set_index = (addr >> b) & mask;
-    unsigned long long tag = addr >> (s + b);
+void store(unsigned long long address, int size) {
+    unsigned long long set_index = (address >> b) & mask;
+    unsigned long long tag = address >> (s + b);
 
     set_t set = cache[set_index];
     int found = 0;
@@ -96,9 +96,9 @@ void store(unsigned long long addr, int size) {
     }
 }
 
-void load(unsigned long long addr, int size) {
-    unsigned long long set_index = (addr >> b) & mask;
-    unsigned long long tag = addr >> (s + b);
+void load(unsigned long long address, int size) {
+    unsigned long long set_index = (address >> b) & mask;
+    unsigned long long tag = address >> (s + b);
 
     set_t set = cache[set_index];
     int line = 0;
@@ -125,6 +125,7 @@ void run(char * fileName) {
     char operation;
     int size;
     unsigned long long address;
+
 
     while (fscanf(opened_file, " %c %llx,%d", &operation, &address, &size) == 3) {
         if (operation == 'L') {
