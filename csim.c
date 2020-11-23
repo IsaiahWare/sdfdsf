@@ -65,7 +65,8 @@ void missed(set_t set, unsigned long long tag) {
 
     set[line].valid = 1;
     set[line].tag = tag;
-    set[line].timestamp = timestamp++;
+    set[line].timestamp = timestamp;
+    timestamp++;
 }
 
 void store(unsigned long long addr, int size) {
@@ -77,21 +78,17 @@ void store(unsigned long long addr, int size) {
 
     for (int line = 0; line < E; ++line) {
         if (set[line].valid && set[line].tag == tag) {
-            set[line].timestamp = timestamp++;
+            set[line].timestamp = timestamp;
             set[line].dirty = 1;
             set[line].size = size;
             dirty_active += size;
             hits++;
+            timestamp++;
             found = 1;
             break;
         }
     }
-    if (found == 1) {
-        return;
-    }
-    if (found == 1) {
-        return;
-    } else {
+    if (found == 0) {
         missed(set, tag);
     }
 }
@@ -105,15 +102,14 @@ void load(unsigned long long addr, int size) {
 
     for (int line = 0; line < E; ++line) {
         if (set[line].valid == 1 && set[line].tag == tag) {
-            set[line].timestamp = timestamp++;
+            set[line].timestamp = timestamp;
             hits++;
+            timestamp++;
             found = 1;
             break;
         }
     };
-    if (found == 1) {
-        return;
-    } else {
+    if (found == 0) {
         missed(set, tag);
     }
 }
