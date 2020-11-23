@@ -47,10 +47,10 @@ void missed(set_t set, unsigned long long tag) {
 
     misses++;
 
-    for (int i = 0; i < E; ++i) {
-        if (smallest_timestamp > set[i].timestamp) {
+    for (int line = 0; line < E; ++line) {
+        if (smallest_timestamp > set[line].timestamp) {
             line = i;
-            smallest_timestamp = set[i].timestamp;
+            smallest_timestamp = set[line].timestamp;
         }
     }
 
@@ -75,18 +75,16 @@ void store(unsigned long long addr, int size) {
     set_t set = cache[set_index];
 
     for (int line = 0; line < E; ++line) {
-        if (set[line].valid) {
-            if (set[line].tag == tag) {
-                set[line].timestamp = timestamp++;
-                set[line].dirty = 1;
-                set[line].size = size;
-                dirty_active += size;
-                hits++;
-                return;
-            }
+        if (set[line].valid && set[line].tag == tag) {
+            set[line].timestamp = timestamp++;
+            set[line].dirty = 1;
+            set[line].size = size;
+            dirty_active += size;
+            hits++;
+            break;
         }
     }
-
+    return;
     missed(set, tag);
 }
 
@@ -100,17 +98,17 @@ void load(unsigned long long addr, int size) {
         if (set[line].valid == 1 && set[line].tag == tag) {
             set[line].timestamp = timestamp++;
             hits++;
-            return;
+            break;
         }
     }
-
+    return;
     missed(set, tag);
 }
 
 void run(char* fileName) {
-    FILE* opened_file = fopen(fileName, "r");
-    char operation;
+    FILE * opened_file = fopen(fileName, "r");
     int size;
+    char operation;
     unsigned long long address;
 
 
@@ -151,15 +149,15 @@ int main(int argc, char * argv[]) {
         }
     }
 
-    mask = ((1 << s)- 1);
+    mask = (1 << s) - 1;
 
-    S = (unsigned int)(1 << s);
-    B = (unsigned int)(1 << b);
+    S = 1 << s;
+    B = 1 << b;
 
-    cache = (set_t*)malloc(sizeof(set_t) * S);
+    cache = (set_t *) malloc(sizeof(set_t) * S);
 
     for (int set = 0; set < S; set++) {
-        cache[set] = (line_t*)malloc(sizeof(line_t) * E);
+        cache[set] = (line_t *) malloc(sizeof(line_t) * E);
         for (int line = 0; line < E; line++) {
             cache[set][line].valid = 0;
             cache[set][line].dirty = 0;
