@@ -42,7 +42,7 @@ unsigned long long mask;
 cache_t cache;
 
 void missed(set_t set, unsigned long long tag) {
-    unsigned long long smallest_timestamp = ULONG_MAX;
+    unsigned long long smallest_timestamp = 0xFFFFFFFFUL;
     unsigned int line = 0;
 
     misses++;
