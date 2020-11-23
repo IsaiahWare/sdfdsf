@@ -73,6 +73,7 @@ void store(unsigned long long addr, int size) {
     unsigned long long tag = addr >> (s + b);
 
     set_t set = cache[set_index];
+    int found = 0;
 
     for (int line = 0; line < E; ++line) {
         if (set[line].valid && set[line].tag == tag) {
@@ -81,10 +82,18 @@ void store(unsigned long long addr, int size) {
             set[line].size = size;
             dirty_active += size;
             hits++;
-            return;
+            found = 1;
+            break;
         }
     }
-    missed(set, tag);
+    if (found == 1) {
+        return;
+    }
+    if (found == 1) {
+        return;
+    } else {
+        missed(set, tag);
+    }
 }
 
 void load(unsigned long long addr, int size) {
@@ -92,15 +101,21 @@ void load(unsigned long long addr, int size) {
     unsigned long long tag = addr >> (s + b);
 
     set_t set = cache[set_index];
+    int found = 0;
 
     for (int line = 0; line < E; ++line) {
         if (set[line].valid == 1 && set[line].tag == tag) {
             set[line].timestamp = timestamp++;
             hits++;
-            return;
+            found = 1;
+            break;
         }
     };
-    missed(set, tag);
+    if (found == 1) {
+        return;
+    } else {
+        missed(set, tag);
+    }
 }
 
 void run(char* fileName) {
