@@ -127,7 +127,7 @@ void run(char * fileName) {
     unsigned long long address;
 
 
-    while (fscanf(opened_file, " %c %ll,%d", &operation, &address, &size) == 3) {
+    while (fscanf(opened_file, " %c %llx,%d", &operation, &address, &size) == 3) {
         if (operation == 'L') {
             load(address, size);
         }
