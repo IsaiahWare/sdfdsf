@@ -25,25 +25,25 @@ int E = 0;
 int B;
 int S;
 
-unsigned long long int timestamp = 0;
+unsigned long long timestamp = 0;
 
 typedef struct line {
     char valid;
     char dirty;
     int size;
-    unsigned long long int tag;
+    unsigned long long tag;
     unsigned long timestamp;
 } line_t;
 
 typedef line_t * set_t;
 typedef set_t * cache_t;
 
-unsigned long long int mask;
+unsigned long long mask;
 
 cache_t cache;
 
-void missed(set_t set, unsigned long long int tag) {
-    unsigned long long int eviction_lru = ULONG_MAX;
+void missed(set_t set, unsigned long long tag) {
+    unsigned long long eviction_lru = ULONG_MAX;
     unsigned int eviction_line = 0;
 
     misses++;
@@ -69,9 +69,9 @@ void missed(set_t set, unsigned long long int tag) {
     set[eviction_line].timestamp = timestamp++;
 }
 
-void store(unsigned long long int addr, int size) {
-    unsigned long long int set_index = (addr >> b) & mask;
-    unsigned long long int tag = addr >> (s + b);
+void store(unsigned long long addr, int size) {
+    unsigned long long set_index = (addr >> b) & mask;
+    unsigned long long tag = addr >> (s + b);
 
     set_t set = cache[set_index];
 
@@ -91,9 +91,9 @@ void store(unsigned long long int addr, int size) {
     missed(set, tag);
 }
 
-void load(unsigned long long int addr, int size) {
-    unsigned long long int set_index = (addr >> b) & mask;
-    unsigned long long int tag = addr >> (s + b);
+void load(unsigned long long addr, int size) {
+    unsigned long long set_index = (addr >> b) & mask;
+    unsigned long long tag = addr >> (s + b);
 
     set_t set = cache[set_index];
 
@@ -112,7 +112,7 @@ void run(char* fileName) {
     FILE* opened_file = fopen(fileName, "r");
     char operation;
     int size;
-    unsigned long long int address;
+    unsigned long long address;
 
 
     while (fscanf(opened_file, " %c %llx,%d", &operation, &address, &size) == 3) {
@@ -152,13 +152,13 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    mask = (unsigned long long int)((1 << s)- 1);
+    mask = (unsigned long long)((1 << s)- 1);
 
     S = (unsigned int)(1 << s);
     B = (unsigned int)(1 << b);
 
     cache = (set_t*)malloc(sizeof(set_t) * S);
-    
+
     for (int set = 0; set < S; set++) {
         cache[set] = (line_t*)malloc(sizeof(line_t) * E);
         for (int line = 0; line < E; line++) {
