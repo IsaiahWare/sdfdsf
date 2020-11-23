@@ -81,10 +81,10 @@ void store(unsigned long long addr, int size) {
             set[line].size = size;
             dirty_active += size;
             hits++;
-            return;
+            break;
         }
     }
-
+    return;
     missed(set, tag);
 }
 
@@ -98,10 +98,10 @@ void load(unsigned long long addr, int size) {
         if (set[line].valid == 1 && set[line].tag == tag) {
             set[line].timestamp = timestamp++;
             hits++;
-            return;
+            break;
         }
     }
-
+    return;
     missed(set, tag);
 }
 
