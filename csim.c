@@ -43,29 +43,29 @@ cache_t cache;
 
 void missed(set_t set, unsigned long long tag) {
     unsigned long long smallest_timestamp = ULONG_MAX;
-    unsigned int line = 0;
+    unsigned int least_recent_line = 0;
 
     misses++;
 
-    for (int line = 0; line < E; ++line) {
-        if (smallest_timestamp > set[line].timestamp) {
-            line = i;
-            smallest_timestamp = set[line].timestamp;
+    for (int i = 0; i < E; ++i) {
+        if (smallest_timestamp > set[i].timestamp) {
+            least_recent_line = i;
+            smallest_timestamp = set[i].timestamp;
         }
     }
 
-    if (set[line].valid) {
+    if (set[least_recent_line].valid) {
         evictions++;
     }
 
-    if (set[line].dirty) {
-        dirty_evicted += set[line].size;
-        dirty_active -= set[line].size;
+    if (set[least_recent_line].dirty) {
+        dirty_evicted += set[least_recent_line].size;
+        dirty_active -= set[least_recent_line].size;
     }
 
-    set[line].valid = 1;
-    set[line].tag = tag;
-    set[line].timestamp = timestamp++;
+    set[least_recent_line].valid = 1;
+    set[least_recent_line].tag = tag;
+    set[least_recent_line].timestamp = timestamp++;
 }
 
 void store(unsigned long long addr, int size) {
