@@ -88,6 +88,7 @@ void store(unsigned long long addr, int size) {
             break;
         }
     }
+
     if (found == 0) {
         missed(set, tag);
     }
@@ -109,13 +110,14 @@ void load(unsigned long long addr, int size) {
             break;
         }
     };
+
     if (found == 0) {
         missed(set, tag);
     }
 }
 
-void run(char* fileName) {
-    FILE* opened_file = fopen(fileName, "r");
+void run(char * fileName) {
+    FILE * opened_file = fopen(fileName, "r");
     char operation;
     int size;
     unsigned long long address;
