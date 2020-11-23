@@ -130,7 +130,7 @@ void run(char* fileName) {
     fclose(opened_file);
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char * argv[]) {
     char arg;
 
     while ((arg = getopt(argc, argv, "s:E:b:t:vh")) != -1) {
@@ -151,7 +151,7 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    mask = (unsigned long long)((1 << s)- 1);
+    mask = ((1 << s)- 1);
 
     S = (unsigned int)(1 << s);
     B = (unsigned int)(1 << b);
