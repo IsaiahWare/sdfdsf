@@ -43,29 +43,29 @@ cache_t cache;
 
 void missed(set_t set, unsigned long long tag) {
     unsigned long long smallest_timestamp = ULONG_MAX;
-    unsigned int least_recent_line = 0;
+    unsigned int line = 0;
 
     misses++;
 
     for (int i = 0; i < E; ++i) {
         if (smallest_timestamp > set[i].timestamp) {
-            least_recent_line = i;
+            line = i;
             smallest_timestamp = set[i].timestamp;
         }
     }
 
-    if (set[least_recent_line].valid) {
+    if (set[line].valid) {
         evictions++;
     }
 
-    if (set[least_recent_line].dirty) {
-        dirty_evicted += set[least_recent_line].size;
-        dirty_active -= set[least_recent_line].size;
+    if (set[line].dirty) {
+        dirty_evicted += set[line].size;
+        dirty_active -= set[line].size;
     }
 
-    set[least_recent_line].valid = 1;
-    set[least_recent_line].tag = tag;
-    set[least_recent_line].timestamp = timestamp++;
+    set[line].valid = 1;
+    set[line].tag = tag;
+    set[line].timestamp = timestamp++;
 }
 
 void store(unsigned long long addr, int size) {
@@ -81,10 +81,10 @@ void store(unsigned long long addr, int size) {
             set[line].size = size;
             dirty_active += size;
             hits++;
-            break;
+            return;
         }
     }
-    return;
+
     missed(set, tag);
 }
 
@@ -98,10 +98,10 @@ void load(unsigned long long addr, int size) {
         if (set[line].valid == 1 && set[line].tag == tag) {
             set[line].timestamp = timestamp++;
             hits++;
-            break;
+            return;
         }
     }
-    return;
+
     missed(set, tag);
 }
 
