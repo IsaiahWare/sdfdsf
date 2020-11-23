@@ -42,8 +42,31 @@ unsigned long long int mask;
 
 cache_t cache;
 
-void initCache() {
-    
+void missed(set_t set, unsigned long long int tag) {
+    unsigned long long int eviction_lru = ULONG_MAX;
+    unsigned int eviction_line = 0;
+
+    misses++;
+
+    for (int i = 0; i < E; ++i) {
+        if (eviction_lru > set[i].timestamp) {
+            eviction_line = i;
+            eviction_lru = set[i].timestamp;
+        }
+    }
+
+    if (set[eviction_line].valid) {
+        evictions++;
+    }
+
+    if (set[eviction_line].dirty) {
+        dirty_evicted += set[eviction_line].size;
+        dirty_active -= set[eviction_line].size;
+    }
+
+    set[eviction_line].valid = 1;
+    set[eviction_line].tag = tag;
+    set[eviction_line].timestamp = timestamp++;
 }
 
 void store(unsigned long long int addr, int size) {
@@ -83,33 +106,6 @@ void load(unsigned long long int addr, int size) {
     }
 
     missed(set, tag);
-}
-
-void missed(set_t set, unsigned long long int tag) {
-    unsigned long long int eviction_lru = ULONG_MAX;
-    unsigned int eviction_line = 0;
-
-    misses++;
-
-    for (int i = 0; i < E; ++i) {
-        if (eviction_lru > set[i].timestamp) {
-            eviction_line = i;
-            eviction_lru = set[i].timestamp;
-        }
-    }
-
-    if (set[eviction_line].valid) {
-        evictions++;
-    }
-
-    if (set[eviction_line].dirty) {
-        dirty_evicted += set[eviction_line].size;
-        dirty_active -= set[eviction_line].size;
-    }
-
-    set[eviction_line].valid = 1;
-    set[eviction_line].tag = tag;
-    set[eviction_line].timestamp = timestamp++;
 }
 
 void run(char* fileName) {
