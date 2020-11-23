@@ -47,10 +47,10 @@ void missed(set_t set, unsigned long long tag) {
 
     misses++;
 
-    for (int line = 0; line < E; ++line) {
-        if (smallest_timestamp > set[line].timestamp) {
-            // line = i;
-            smallest_timestamp = set[line].timestamp;
+    for (int currLine = 0; currLine < E; ++currLine) {
+        if (smallest_timestamp > set[currLine].timestamp) {
+            line = currLine;
+            smallest_timestamp = set[currLine].timestamp;
         }
     }
 
