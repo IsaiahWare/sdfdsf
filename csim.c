@@ -49,7 +49,7 @@ void missed(set_t set, unsigned long long tag) {
 
     for (int line = 0; line < E; ++line) {
         if (smallest_timestamp > set[line].timestamp) {
-            line = i;
+            // line = i;
             smallest_timestamp = set[line].timestamp;
         }
     }
