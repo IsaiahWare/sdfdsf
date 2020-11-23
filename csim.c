@@ -21,9 +21,8 @@ int double_accesses = 0;
 int b = 0;
 int s = 0;
 int E = 0;
-
-int B;
-int S;
+int B = 0;
+int S = 0;
 
 unsigned long long timestamp = 0;
 
@@ -43,30 +42,30 @@ unsigned long long mask;
 cache_t cache;
 
 void missed(set_t set, unsigned long long tag) {
-    unsigned long long eviction_lru = ULONG_MAX;
-    unsigned int eviction_line = 0;
+    unsigned long long smallest_timestamp = ULONG_MAX;
+    unsigned int line = 0;
 
     misses++;
 
     for (int i = 0; i < E; ++i) {
-        if (eviction_lru > set[i].timestamp) {
-            eviction_line = i;
-            eviction_lru = set[i].timestamp;
+        if (smallest_timestamp > set[i].timestamp) {
+            line = i;
+            smallest_timestamp = set[i].timestamp;
         }
     }
 
-    if (set[eviction_line].valid) {
+    if (set[line].valid) {
         evictions++;
     }
 
-    if (set[eviction_line].dirty) {
-        dirty_evicted += set[eviction_line].size;
-        dirty_active -= set[eviction_line].size;
+    if (set[line].dirty) {
+        dirty_evicted += set[line].size;
+        dirty_active -= set[line].size;
     }
 
-    set[eviction_line].valid = 1;
-    set[eviction_line].tag = tag;
-    set[eviction_line].timestamp = timestamp++;
+    set[line].valid = 1;
+    set[line].tag = tag;
+    set[line].timestamp = timestamp++;
 }
 
 void store(unsigned long long addr, int size) {
