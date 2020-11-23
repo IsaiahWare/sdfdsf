@@ -101,9 +101,10 @@ void load(unsigned long long addr, int size) {
     unsigned long long tag = addr >> (s + b);
 
     set_t set = cache[set_index];
+    int line = 0;
     int found = 0;
 
-    for (int line = 0; line < E; ++line) {
+    while (line < E && found == 0) {
         if (set[line].valid == 1 && set[line].tag == tag) {
             set[line].timestamp = timestamp;
             hits++;
@@ -111,7 +112,8 @@ void load(unsigned long long addr, int size) {
             found = 1;
             break;
         }
-    };
+        line++;
+    }
 
     if (found == 0) {
         missed(set, tag);
@@ -123,7 +125,6 @@ void run(char * fileName) {
     char operation;
     int size;
     unsigned long long address;
-
 
     while (fscanf(opened_file, " %c %llx,%d", &operation, &address, &size) == 3) {
         if (operation == 'L') {
