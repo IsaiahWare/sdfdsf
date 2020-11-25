@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <getopt.h>
 #include <string.h>
 #include "cachelab.h"
