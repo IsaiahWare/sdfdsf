@@ -49,11 +49,11 @@ void missed(set_t set, unsigned long long tag) {
         }
     }
 
-    if (set[line].valid) {
+    if (set[line].valid == 1) {
         evictions++;
     }
 
-    if (set[line].dirty) {
+    if (set[line].dirty == 1) {
         dirty_evicted += set[line].size;
         dirty_active -= set[line].size;
     }
