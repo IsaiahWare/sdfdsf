@@ -1,12 +1,8 @@
-#include <assert.h>
-#include <errno.h>
 #include <getopt.h>
-#include <limits.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #include "cachelab.h"
 
 char * file = NULL;
