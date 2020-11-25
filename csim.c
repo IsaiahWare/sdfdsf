@@ -1,6 +1,7 @@
 #include <stdio.h>
-#include <getopt.h>
+#include <stdlib.h>
 #include <string.h>
+#include <getopt.h>
 #include "cachelab.h"
 
 char * file = NULL;
