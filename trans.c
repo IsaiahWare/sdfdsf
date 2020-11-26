@@ -12,7 +12,6 @@
  */ 
 #include <stdio.h>
 #include "cachelab.h"
-#include "contracts.h"
 
 int is_transpose(int M, int N, int A[N][M], int B[M][N]);
 
@@ -30,9 +29,6 @@ void transpose_submit(int M, int N, int A[N][M], int B[M][N])
     int blocksize;
     int row, col, i, j;
     int a, b, x, y, z; 
-
-    REQUIRES(M > 0);
-    REQUIRES(N > 0);
 
     /* save diagnal to last, avoid cache confliction of Aii and Bii */
     if (M == 32 && N == 32) {
@@ -138,9 +134,6 @@ void trans(int M, int N, int A[N][M], int B[M][N])
 {
     int i, j, tmp;
 
-    REQUIRES(M > 0);
-    REQUIRES(N > 0);
-
     for (i = 0; i < N; i++) {
         for (j = 0; j < M; j++) {
             tmp = A[i][j];
@@ -148,7 +141,7 @@ void trans(int M, int N, int A[N][M], int B[M][N])
         }
     }    
 
-    ENSURES(is_transpose(M, N, A, B));
+    // ENSURES(is_transpose(M, N, A, B));
 }
 
 /*
